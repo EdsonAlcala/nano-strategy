@@ -1,19 +1,33 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import {Script, console} from "forge-std/Script.sol";
+import {console2} from "forge-std/console2.sol";
+import {Vm} from "forge-std/Vm.sol";
+
+import {DeploymentUtils} from "@utils/DeploymentUtils.sol";
+import {DeployerUtils} from "@utils/DeployerUtils.sol";
 
 import {AtmAuctionFactory} from "../src/auction/AtmAuctionFactory.sol";
 import {BondAuctionFactory} from "../src/auction/BondAuctionFactory.sol";
 import {FundFactory} from "../src/FundFactory.sol";
+import {BaseScript} from "./BaseScript.s.sol";
 
-contract DeployFactoryScript is Script {
+contract DeployFactoryScript is BaseScript {
+    using DeployerUtils for Vm;
+    using DeploymentUtils for Vm;
+
     FundFactory public fundFactory;
 
     function setUp() public {}
 
     function run() public {
-        vm.startBroadcast();
+        console2.log("Deploying FundFactory contract");
+        deployer = vm.loadDeployerAddress();
+
+        console2.log("Deployer Address");
+        console2.logAddress(deployer);
+
+        vm.startBroadcast(deployer);
 
         address agentAddress = 0x494B285459Ae0342da4A097be491DB26bab986a9;
 

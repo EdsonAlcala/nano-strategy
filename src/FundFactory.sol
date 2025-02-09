@@ -63,9 +63,6 @@ contract FundFactory is OwnableRoles {
             revert FundAlreadyExists();
         }
 
-        address expectedNextAtmAuctionAddress = IAtmAuctionFactory(atmAuctionFactory).getNextAuctionAddress();
-        address expectedNextBondAuctionAddress = IBondAuctionFactory(bondAuctionFactory).getNextAuctionAddress();
-
         Fund fund = new Fund(
             Fund.FundCreationParameters({
                 name: _name,
@@ -76,9 +73,7 @@ contract FundFactory is OwnableRoles {
                 earlyWithdrawalPenaltyFee: earlyWithdrawalPenaltyFee,
                 minimumDeposit: minimumDeposit,
                 maximumDeposit: maximumDeposit,
-                depositCap: depositCap,
-                atmAuction: expectedNextAtmAuctionAddress,
-                bondAuction: expectedNextBondAuctionAddress
+                depositCap: depositCap
             })
         );
 
@@ -90,8 +85,7 @@ contract FundFactory is OwnableRoles {
         address atmAuction =
             IAtmAuctionFactory(atmAuctionFactory).createAtmAuctionContractInstance(fundAddress, owner(), _atmToken);
 
-        assert(address(bondAuction) == expectedNextBondAuctionAddress);
-        assert(address(atmAuction) == expectedNextAtmAuctionAddress);
+        fund.initializeAuctionAddresses(bondAuction, atmAuction);
 
         funds.push(fundAddress);
         fundExists[fundAddress] = true;

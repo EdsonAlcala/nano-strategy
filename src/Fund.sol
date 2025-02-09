@@ -18,6 +18,9 @@ contract Fund is OwnableRoles, ERC20 {
     /// @dev The role of the pauser can pause transfers of tokens
     uint8 public constant PAUSER_ROLE = 2;
 
+    /// @dev The role for the admin
+    uint8 public constant ADMIN_ROLE = 3;
+
     /// @dev The underlying token of the fund
     IERC20 public immutable underlyingToken;
 
@@ -40,10 +43,10 @@ contract Fund is OwnableRoles, ERC20 {
     uint256 public immutable depositCap;
 
     /// @dev The bond auction address
-    address public immutable bondAuction;
+    address public bondAuction;
 
     /// @dev The atm auction address
-    address public immutable atmAuction;
+    address public atmAuction;
 
     /// @dev The transfer pause status, minting is still allowed
     bool public isTransferPaused = true;
@@ -60,8 +63,6 @@ contract Fund is OwnableRoles, ERC20 {
         uint256 minimumDeposit;
         uint256 maximumDeposit;
         uint256 depositCap;
-        address bondAuction;
-        address atmAuction;
     }
 
     /// @dev The constructor for the Fund contract
@@ -79,12 +80,18 @@ contract Fund is OwnableRoles, ERC20 {
         maximumDeposit = _parameters.maximumDeposit;
         depositCap = _parameters.depositCap;
 
-        bondAuction = _parameters.bondAuction;
-        atmAuction = _parameters.atmAuction;
+        _grantRoles(msg.sender, ADMIN_ROLE);
+    }
 
-        /// @dev Initialize the roles of the fund
-        _grantRoles(_parameters.atmAuction, MINTER_ROLE);
-        _grantRoles(_parameters.bondAuction, MINTER_ROLE);
+    function initializeAuctionAddresses(address _bondAuction, address _atmAuction)
+        external
+        onlyOwnerOrRoles(ADMIN_ROLE)
+    {
+        bondAuction = _bondAuction;
+        atmAuction = _atmAuction;
+
+        _grantRoles(_atmAuction, MINTER_ROLE);
+        _grantRoles(_bondAuction, MINTER_ROLE);
     }
 
     /// -------------------------------------------------------------------------------------------------

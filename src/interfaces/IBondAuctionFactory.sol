@@ -5,6 +5,4 @@ interface IBondAuctionFactory {
     function createBondAuctionContractInstance(address _fund, address _owner, address _paymentToken)
         external
         returns (address);
-
-    function getNextAuctionAddress() external view returns (address);
 }

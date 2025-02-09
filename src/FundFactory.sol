@@ -63,15 +63,8 @@ contract FundFactory is OwnableRoles {
             revert FundAlreadyExists();
         }
 
-        address expectedNextFundAddress = _getNextFundAddress();
-
-        address bondAuction = IBondAuctionFactory(bondAuctionFactory).createBondAuctionContractInstance(
-            expectedNextFundAddress, owner(), _bondToken
-        );
-
-        address atmAuction = IAtmAuctionFactory(atmAuctionFactory).createAtmAuctionContractInstance(
-            expectedNextFundAddress, owner(), _atmToken
-        );
+        address expectedNextAtmAuctionAddress = IAtmAuctionFactory(atmAuctionFactory).getNextAuctionAddress();
+        address expectedNextBondAuctionAddress = IBondAuctionFactory(bondAuctionFactory).getNextAuctionAddress();
 
         Fund fund = new Fund(
             Fund.FundCreationParameters({
@@ -84,27 +77,26 @@ contract FundFactory is OwnableRoles {
                 minimumDeposit: minimumDeposit,
                 maximumDeposit: maximumDeposit,
                 depositCap: depositCap,
-                bondAuction: bondAuction,
-                atmAuction: atmAuction
+                atmAuction: expectedNextAtmAuctionAddress,
+                bondAuction: expectedNextBondAuctionAddress
             })
         );
 
         address fundAddress = address(fund);
 
+        address bondAuction =
+            IBondAuctionFactory(bondAuctionFactory).createBondAuctionContractInstance(fundAddress, owner(), _bondToken);
+
+        address atmAuction =
+            IAtmAuctionFactory(atmAuctionFactory).createAtmAuctionContractInstance(fundAddress, owner(), _atmToken);
+
+        assert(address(bondAuction) == expectedNextBondAuctionAddress);
+        assert(address(atmAuction) == expectedNextAtmAuctionAddress);
+
         funds.push(fundAddress);
         fundExists[fundAddress] = true;
         fundsInformation[fundAddress].push(
             FundInformation({creator: msg.sender, name: _name, symbol: _symbol, underlyingToken: _underlyingToken})
-        );
-    }
-
-    function _getNextFundAddress() internal view returns (address) {
-        return address(
-            uint160(
-                uint256(
-                    keccak256(abi.encodePacked(bytes1(0xd6), bytes1(0x94), address(this), bytes1(uint8(funds.length))))
-                )
-            )
         );
     }
 

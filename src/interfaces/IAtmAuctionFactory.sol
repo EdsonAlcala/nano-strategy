@@ -5,4 +5,6 @@ interface IAtmAuctionFactory {
     function createAtmAuctionContractInstance(address _fund, address _owner, address _paymentToken)
         external
         returns (address);
+
+    function getNextAuctionAddress() external view returns (address);
 }

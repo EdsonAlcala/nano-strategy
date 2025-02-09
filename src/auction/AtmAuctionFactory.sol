@@ -43,6 +43,22 @@ contract AtmAuctionFactory is OwnableRoles {
         return auction;
     }
 
+    /// @notice Predicts the next AtmAuction contract address
+    /// @return The predicted address of the next auction instance
+    function getNextAuctionAddress() external view returns (address) {
+        return address(
+            uint160(
+                uint256(
+                    keccak256(
+                        abi.encodePacked(
+                            bytes1(0xd6), bytes1(0x94), address(this), bytes1(uint8(auctionInstances.length))
+                        )
+                    )
+                )
+            )
+        );
+    }
+
     /// @notice Returns all auction instances
     /// @return The list of auction instances
     function getAuctionInstances() external view returns (address[] memory) {

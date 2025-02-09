@@ -15,7 +15,7 @@ contract DeployFactoryScript is Script {
     function run() public {
         vm.startBroadcast();
 
-        address agentAddress = address(this);
+        address agentAddress = 0x494B285459Ae0342da4A097be491DB26bab986a9;
 
         // Deploy AtmBondFactory
         AtmAuctionFactory atmAuctionFactory = new AtmAuctionFactory();

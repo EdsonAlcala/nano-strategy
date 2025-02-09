@@ -1,16 +1,25 @@
 // SPDX-License-Identifier: Apache 2.0
 pragma solidity ^0.8.26;
 
+import {OwnableRoles} from "solady/src/auth/OwnableRoles.sol";
 import {BondAuction} from "./BondAuction.sol";
 
 error BondAuctionAlreadyExists();
 
-contract BondAuctionFactory {
+contract BondAuctionFactory is OwnableRoles {
+    /// @dev The role for the admin, can start and cancel auctions
+    uint8 public constant ADMIN_ROLE = 1;
+
     address[] public auctionInstances;
 
     mapping(address => address) public fundToAuctionInstance;
 
     mapping(address => bool) public fundToAuctionInstanceExists;
+
+    constructor() {
+        /// @dev After we setup the factory admin in the deploy script, we set the owner to the address 0
+        _initializeOwner(msg.sender);
+    }
 
     /// @notice Creates a new BondAuction contract instance
     /// @param _fund The address of the fund
@@ -20,6 +29,7 @@ contract BondAuctionFactory {
     /// @dev This should be called once per fund or when the fund is created.
     function createBondAuctionContractInstance(address _fund, address _owner, address _paymentToken)
         external
+        onlyRoles(ADMIN_ROLE)
         returns (BondAuction)
     {
         if (fundToAuctionInstanceExists[_fund]) {

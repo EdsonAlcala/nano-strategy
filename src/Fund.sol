@@ -116,6 +116,7 @@ contract Fund is Ownable, ERC20 {
     /// -------------------------------------------------------------------------------------------------
 
     /// @dev The function to redeem tokens from the fund
+    /// @dev To review the logic for the redemption
     /// @param _amount The amount of tokens to redeem
     function redeem(uint256 _amount) external onlyAfterSeedPeriod {
         _burn(msg.sender, _amount);

@@ -1,12 +1,8 @@
-## XStrategy
+## Nano Strategy
 
-XStrategy is a platform for creating and managing funds similar to MicroStrategy.
-
-## Fund
-
-Fund is a contract that allows users to create and manage funds.
+Nano strategy helps you deploy investment funds for erc-20 tokens
 
 ## FundFactory
 
-FundFactory is a contract that allows users to create and manage funds.
+FundFactory is a contract that allows agents to create investment funds for ERC-20 tokens
 

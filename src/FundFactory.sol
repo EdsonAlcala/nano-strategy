@@ -35,6 +35,22 @@ contract FundFactory is OwnableRoles {
     mapping(address => FundInformation[]) public fundsInformation;
     mapping(address => bool) public fundExists;
 
+    event FundCreated(
+        address indexed fund,
+        address indexed creator,
+        string name,
+        string symbol,
+        address underlyingToken,
+        address agentAddress,
+        address bondAuction,
+        address atmAuction,
+        uint256 seedDuration,
+        uint256 earlyWithdrawalPenaltyFee,
+        uint256 minimumDeposit,
+        uint256 maximumDeposit,
+        uint256 depositCap
+    );
+
     constructor(
         address _agentAddress,
         uint256 _seedPeriodDuration,
@@ -91,6 +107,22 @@ contract FundFactory is OwnableRoles {
         fundExists[fundAddress] = true;
         fundsInformation[fundAddress].push(
             FundInformation({creator: msg.sender, name: _name, symbol: _symbol, underlyingToken: _underlyingToken})
+        );
+
+        emit FundCreated(
+            fundAddress,
+            msg.sender,
+            _name,
+            _symbol,
+            _underlyingToken,
+            agentAddress,
+            bondAuction,
+            atmAuction,
+            seedPeriodDuration,
+            earlyWithdrawalPenaltyFee,
+            minimumDeposit,
+            maximumDeposit,
+            depositCap
         );
     }
 

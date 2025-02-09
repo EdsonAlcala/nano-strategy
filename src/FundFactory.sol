@@ -51,12 +51,14 @@ contract FundFactory is Ownable {
             revert FundAlreadyExists();
         }
 
+        address expectedNextFundAddress = _getNextFundAddress();
+
         address bondAuction = IBondAuctionFactory(bondAuctionFactory).createBondAuctionContractInstance(
-            address(this), msg.sender, _underlyingToken
+            expectedNextFundAddress, owner(), _underlyingToken
         );
 
         address atmAuction = IAtmAuctionFactory(atmAuctionFactory).createAtmAuctionContractInstance(
-            address(this), msg.sender, _underlyingToken
+            expectedNextFundAddress, owner(), _underlyingToken
         );
 
         Fund fund = new Fund(
@@ -81,6 +83,23 @@ contract FundFactory is Ownable {
         fundExists[fundAddress] = true;
         fundsInformation[fundAddress].push(
             FundInformation({creator: msg.sender, name: _name, symbol: _symbol, underlyingToken: _underlyingToken})
+        );
+    }
+
+    function _getNextFundAddress() internal view returns (address) {
+        return address(
+            uint160(
+                uint256(
+                    keccak256(
+                        abi.encodePacked(
+                            bytes1(0xd6),
+                            bytes1(0x94),
+                            address(this),
+                            bytes1(uint8(funds.length)) // O el nonce actual del contrato
+                        )
+                    )
+                )
+            )
         );
     }
 

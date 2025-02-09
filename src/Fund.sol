@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
-import "@openzeppelin/access/Ownable.sol";
+import {OwnableRoles} from "solady/src/auth/OwnableRoles.sol";
 import "@openzeppelin/token/ERC20/ERC20.sol";
 import "@openzeppelin/token/ERC20/IERC20.sol";
 
@@ -11,7 +11,13 @@ error TransferPaused();
 /// @dev The error for when the seed period is invalid
 error InvalidSeedPeriod();
 
-contract Fund is Ownable, ERC20 {
+contract Fund is OwnableRoles, ERC20 {
+    /// @dev The role for the minter is able to mint unlimited tokens
+    uint8 public constant MINTER_ROLE = 1;
+
+    /// @dev The role of the pauser can pause transfers of tokens
+    uint8 public constant PAUSER_ROLE = 2;
+
     /// @dev The underlying token of the fund
     IERC20 public immutable underlyingToken;
 
@@ -60,10 +66,11 @@ contract Fund is Ownable, ERC20 {
 
     /// @dev The constructor for the Fund contract
     /// @param _parameters The parameters for the fund creation
-    constructor(FundCreationParameters memory _parameters)
-        Ownable(_parameters.agentAddress)
-        ERC20(_parameters.name, _parameters.symbol)
-    {
+    constructor(FundCreationParameters memory _parameters) ERC20(_parameters.name, _parameters.symbol) {
+        /// @dev Initialize the owner of the fund
+        _initializeOwner(_parameters.agentAddress);
+
+        /// @dev Initialize the properties of the fund
         underlyingToken = IERC20(_parameters.underlyingToken);
         seedPeriodDuration = _parameters.seedDuration;
         seedPeriodEndTime = block.timestamp + seedPeriodDuration;
@@ -71,8 +78,13 @@ contract Fund is Ownable, ERC20 {
         minimumDeposit = _parameters.minimumDeposit;
         maximumDeposit = _parameters.maximumDeposit;
         depositCap = _parameters.depositCap;
+
         bondAuction = _parameters.bondAuction;
         atmAuction = _parameters.atmAuction;
+
+        /// @dev Initialize the roles of the fund
+        _grantRoles(_parameters.atmAuction, MINTER_ROLE);
+        _grantRoles(_parameters.bondAuction, MINTER_ROLE);
     }
 
     /// -------------------------------------------------------------------------------------------------
@@ -94,21 +106,6 @@ contract Fund is Ownable, ERC20 {
 
         uint256 penalty = (_amount * earlyWithdrawalPenaltyFee) / 100;
         underlyingToken.transfer(msg.sender, _amount - penalty);
-    }
-
-    /// -------------------------------------------------------------------------------------------------
-    /// BOND LOGIC
-    /// -------------------------------------------------------------------------------------------------
-    function createBond() external onlyOwner {}
-
-    /// -------------------------------------------------------------------------------------------------
-    /// ATM LOGIC
-    /// -------------------------------------------------------------------------------------------------
-
-    /// @dev The function to make an ATM offering
-    /// @param _amount The amount of tokens to offer
-    function makeATMOffering(uint256 _amount) external onlyOwner {
-        _mint(msg.sender, _amount);
     }
 
     /// -------------------------------------------------------------------------------------------------
@@ -153,6 +150,10 @@ contract Fund is Ownable, ERC20 {
             revert TransferPaused();
         }
         super._update(_from, _to, _value);
+    }
+
+    function mint(address _to, uint256 _amount) external onlyOwnerOrRoles(MINTER_ROLE) {
+        _mint(_to, _amount);
     }
 
     /// -------------------------------------------------------------------------------------------------

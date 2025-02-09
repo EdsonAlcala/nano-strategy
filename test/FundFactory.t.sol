@@ -2,34 +2,16 @@
 pragma solidity ^0.8.13;
 
 import {Test, console} from "forge-std/Test.sol";
-import {Fund} from "../src/Fund.sol";
+import {FundFactory} from "../src/FundFactory.sol";
 
-contract FundTest is Test {
-    Fund public fund;
+contract FundFactoryTest is Test {
+    FundFactory public fundFactory;
 
     function setUp() public {
-        address bondAuction = address(0);
-        address atmAuction = address(0);
-
-        fund = new Fund(
-            Fund.FundCreationParameters({
-                name: "Test Fund",
-                symbol: "TF",
-                agentAddress: address(this),
-                underlyingToken: address(0),
-                seedDuration: 100,
-                earlyWithdrawalPenaltyFee: 100,
-                minimumDeposit: 100,
-                maximumDeposit: 1000,
-                depositCap: 1000,
-                bondAuction: bondAuction,
-                atmAuction: atmAuction
-            })
-        );
+        fundFactory = new FundFactory(address(this), 100, 100, address(0), address(0));
     }
 
-    function test_Deposit() public {
-        fund.deposit(100);
-        assertEq(fund.balanceOf(address(this)), 100);
+    function test_createFund() public {
+        fundFactory.createFund("Test Fund", "TF", address(0), address(0), address(0));
     }
 }

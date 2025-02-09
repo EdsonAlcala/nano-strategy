@@ -28,7 +28,7 @@ contract FundTest is Test {
         );
     }
 
-    function test_Deposit() public {
+    function test_deposit() public {
         fund.deposit(100);
         assertEq(fund.balanceOf(address(this)), 100);
     }

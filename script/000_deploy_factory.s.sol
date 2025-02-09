@@ -7,7 +7,7 @@ import {AtmAuctionFactory} from "../src/auction/AtmAuctionFactory.sol";
 import {BondAuctionFactory} from "../src/auction/BondAuctionFactory.sol";
 import {FundFactory} from "../src/FundFactory.sol";
 
-contract FundScript is Script {
+contract DeployFactoryScript is Script {
     FundFactory public fundFactory;
 
     function setUp() public {}

@@ -1,0 +1,66 @@
+{
+    "contractName": "FundFactory",
+    "abi": [],
+    "metadata": "{\"compiler\":{\"version\":\"0.8.26+commit.8a97fa7a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/edsonalcala/AIAgentsLife/xstrategy/src/FundFactory.sol\":\"FundFactory\"},\"evmVersion\":\"cancun\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[],\"viaIR\":true},\"sources\":{\"/Users/edsonalcala/AIAgentsLife/xstrategy/src/FundFactory.sol\":{\"keccak256\":\"0x913c837caf06aad89c1c33443602656a462224d703e7c43905b56786ea935c66\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2608e0e67554a0779d522b3da514fcb6129021809857b9cd711da6b19310a63d\",\"dweb:/ipfs/QmUazEZHgkvdrjWZgStMW9X3VCtUgKMEabkwz2rYxB6Gn3\"]}},\"version\":1}",
+    "bytecode": "608080604052346013576039908160188239f35b5f80fdfe5f80fdfea264697066735822122075349451c3928a94781292e1058e4114ca75ab4cca1d4ee62cb2263a9b665a2964736f6c634300081a0033",
+    "deployedBytecode": "5f80fdfea264697066735822122075349451c3928a94781292e1058e4114ca75ab4cca1d4ee62cb2263a9b665a2964736f6c634300081a0033",
+    "sourceMap": "57:23:0:-:0;;;;;;;;;;;;;;;;;",
+    "deployedSourceMap": "57:23:0:-:0;;",
+    "sourcePath": "/Users/edsonalcala/AIAgentsLife/xstrategy/src/FundFactory.sol",
+    "compiler": {
+        "name": "solc",
+        "version": "0.8.26+commit.8a97fa7a"
+    },
+    "ast": {
+        "absolutePath": "/Users/edsonalcala/AIAgentsLife/xstrategy/src/FundFactory.sol",
+        "exportedSymbols": {
+            "FundFactory": [
+                2
+            ]
+        },
+        "id": 3,
+        "license": "MIT",
+        "nodeType": "SourceUnit",
+        "nodes": [
+            {
+                "id": 1,
+                "literals": [
+                    "solidity",
+                    "0.8",
+                    ".26"
+                ],
+                "nodeType": "PragmaDirective",
+                "src": "32:23:0"
+            },
+            {
+                "abstract": false,
+                "baseContracts": [],
+                "canonicalName": "FundFactory",
+                "contractDependencies": [],
+                "contractKind": "contract",
+                "fullyImplemented": true,
+                "id": 2,
+                "linearizedBaseContracts": [
+                    2
+                ],
+                "name": "FundFactory",
+                "nameLocation": "66:11:0",
+                "nodeType": "ContractDefinition",
+                "nodes": [],
+                "scope": 3,
+                "src": "57:23:0",
+                "usedErrors": [],
+                "usedEvents": []
+            }
+        ],
+        "src": "32:49:0"
+    },
+    "functionHashes": {},
+    "gasEstimates": {
+        "creation": {
+            "codeDepositCost": "11400",
+            "executionCost": "69",
+            "totalCost": "11469"
+        }
+    }
+}

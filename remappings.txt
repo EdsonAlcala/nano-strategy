@@ -1,0 +1,4 @@
+@constants/=src/constants/
+@openzeppelin/=dependencies/@openzeppelin-contracts-5.0.2/
+forge-std-1.9.6/=dependencies/forge-std-1.9.6/
+solady/=dependencies/solady-0.1.7/
